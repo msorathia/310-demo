@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from "axios";
 import "../styles/index.css";
 
+
 //Two functions- One for signup and one for login
 //Called by code "on click" or "on submit" (value of on click or on submit is specified by the function)
 //Within functions, create request similar to signUpResponse
@@ -13,8 +14,14 @@ import "../styles/index.css";
 function LoginSignup() {
   const [SignupsuccessResponse, SignupsetSuccess] = useState(false);
   const [LoginsuccessResponse, LoginsetSuccess] = useState(false);
-  const [SignuperrorResponse, SignupsetError] = useState(false);
-  const [LoginerrorResponse, LoginsetError] = useState(false);
+
+  const [PasswordmatchResponse, PasswordmatchError] = useState(false);
+  const [PasswordLengthResponse, PasswordLengthError] = useState(false);
+  const [UserexistsResponse, UserexistsError] = useState(false);
+
+  const [LoginuserexistsResponse, LoginuserexistsError] = useState(false);
+  const [LoginpasswordmatchResponse, LoginpasswordmatchError] = useState(false);
+
   const [showLogin, setShowLogin] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -24,50 +31,73 @@ function LoginSignup() {
 
   const handleSignUp = async (event) => {
       SignupsetSuccess(false);
-      SignupsetError(false);
       LoginsetSuccess(false);
-      LoginsetError(false);
+
+      PasswordmatchError(false);
+      PasswordLengthError(false);
+      UserexistsError(false);
+
       event.preventDefault();
       try {
           const signUpResponse = await axios.post(
               `http://localhost:8080/userController/signup?name=${name}&email=${email}&password=${password}&confirmPassword=${confirmPassword}`
           );
-          console.log("value = " + signUpResponse.data);
-
+          console.log("data = ", signUpResponse.data)
           if(signUpResponse.data.success == "true")
           {
             SignupsetSuccess(true);
           }
           else
           {
-            SignupsetError(true);
+            if(signUpResponse.data.passwordmatch == "false")
+            {
+                PasswordmatchError(true);
+            }
+            else if(signUpResponse.data.passwordLength == "false")
+            {
+                PasswordLengthError(true);
+            }
+            else if(signUpResponse.data.userexists == "false")
+            {
+                UserexistsError(true);
+            }
           }
-      } catch (error) {
+       }
+      catch (error) {
           console.error(error);
       }
   };
 
   const handleLogin = async (event) => {
         SignupsetSuccess(false);
-        SignupsetError(false);
         LoginsetSuccess(false);
-        LoginsetError(false);
+        LoginpasswordmatchError(false);
+        LoginuserexistsError(false);
+
         event.preventDefault();
         try {
             const loginResponse = await axios.post(
                 `http://localhost:8080/userController/login?email=${email}&password=${password}`
             );
-            console.log("value = " + loginResponse.data.success);
-             if(loginResponse.data.success == "true")
+            console.log(loginResponse.data)
+            if(loginResponse.data.success == "true")
              {
                  LoginsetSuccess(true);
              }
              else
             {
-                LoginsetError(true);
+                if(loginResponse.data.loginuserexists == "false")
+                {
+                    LoginuserexistsError(true);
+                }
+                else if(loginResponse.data.loginpasswordmatch == "false")
+                {
+                    LoginpasswordmatchError(true);
+                }
             }
             }
             catch (error) {
+            console.log("errrorroororoor");
             console.error(error);
         }
     };
@@ -101,8 +131,9 @@ function LoginSignup() {
             <button type="submit" onClick={handleLogin}>Login</button>
             <p>Don&apos;t have an account? <button type="button" onClick={toggleForm}>Sign up</button></p>
             <div>
-                  {LoginsuccessResponse && <p>Operation successful!</p>}
-                  {LoginerrorResponse && <p>Operation failed!</p>}
+                  {LoginsuccessResponse && <p>Login successful, Welcome!</p>}
+                  {LoginuserexistsResponse && <p>User does not exist. Please sign up first.</p>}
+                  {LoginpasswordmatchResponse && <p>User exists but your password is incorrect</p>}
             </div>
           </form>
         ) : (
@@ -142,16 +173,18 @@ function LoginSignup() {
             />
             <button type="submit" onSubmit={handleSignUp}>Sign Up</button>
             <p>Already have an account? <button type="button" onClick={toggleForm}>Login</button></p>
+            <div>
+                  {SignupsuccessResponse && <p>Sign Up Successful!</p>}
+                  {PasswordmatchResponse && <p> Passwords do not match. </p>}
+                  {PasswordLengthResponse && <p>Password is less than 8 characters </p>}
+                  {UserexistsResponse && <p>User already exists</p>}
+            </div>
           </form>
         )}
-      </div>
-      {SignupsuccessResponse && <p>Operation successful!</p>}
-      {SignuperrorResponse && <p>Operation failed!</p>}
-    </div>
-  );
-}
+        </div>
+        </div>
+  )};
+
+
 
 export default LoginSignup;
-
-
-
