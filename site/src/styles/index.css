@@ -9,3 +9,65 @@ button:hover {
 button:active {
   background-color: darkgray;
 }
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f0f0f0;
+}
+
+.form-container {
+  background-color: white;
+  padding: 32px;
+  border-radius: 8px;
+  box-shadow: 0 0 16px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+form > * {
+  margin-bottom: 16px;
+}
+
+form > *:last-child {
+  margin-bottom: 0;
+}
+
+input[type='email'],
+input[type='password'],
+input[type='text'] {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  width: 100%;
+}
+
+button[type='submit'],
+button[type='button'] {
+  background-color: #0080ff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  padding: 8px 16px;
+  cursor: pointer;
+}
+
+button[type='submit']:hover,
+button[type='button']:hover {
+  background-color: #0057a8;
+}
+
+@media screen and (max-width: 600px) {
+  .form-container {
+    padding: 16px;
+  }
+}

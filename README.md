@@ -1,6 +1,6 @@
-# 310 Project Demo Repository Information
+# 310 Project Repository Information
 
-This is a demo version of the repository for the 310 group project.  This basic skeleton provides a single branch, **main** that is a sandbox for experimentation and learning.
+This is the repository for the 310 group project.  This basic skeleton provides two initial branches.  **documentation** is for the group's Scrum process documentation.  **main** is the primary branch for development work as described in the project manual.
 
 ## Brief Architecture Overview & Where Things Go
 ### React (Frontend)

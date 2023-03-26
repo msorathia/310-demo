@@ -2,11 +2,13 @@ package edu.usc.csci310.project;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @SpringBootApplication
+@ComponentScan(basePackages = "./loginsignup")
 public class SpringBootAPI {
 
     public static void main(String[] args) {
