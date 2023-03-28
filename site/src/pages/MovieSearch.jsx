@@ -1,13 +1,28 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "../styles/index.css";
 
-
-const Movie = ({title, overview, id}) => {
+const Movie = ({ title, overview, id }) => {
     const [showPopup, setShowPopup] = useState(false);
-    const [extraDetails, setExtraDetails] = useState([])
-    const [actorList, setActorList] = useState([])
+    const [extraDetails, setExtraDetails] = useState([]);
+    const [actorList, setActorList] = useState([]);
+    const [isHovering, setIsHovering] = useState(false);
+
+    const [isInWatchlist, setIsInWatchlist] = useState(
+        localStorage.getItem(id) === "true"
+    );
+
+    const toggleWatchlist = () => {
+        setIsInWatchlist((prev) => {
+            localStorage.setItem(id, !prev);
+            return !prev;
+        });
+    };
+
+    useEffect(() => {
+        console.log("Watchlist:", isInWatchlist);
+    }, [isInWatchlist]);
 
     let rating = null;
     let releaseDate = null;
@@ -18,33 +33,53 @@ const Movie = ({title, overview, id}) => {
         setShowPopup(!showPopup);
         event.preventDefault();
         try {
-
             const response = await axios.get(
                 `http://localhost:8080/getmoviedetails?id=${id}`
             );
-            console.log(response.data)
-            console.log("received response")
+            console.log(response.data);
+            console.log("received response");
             setExtraDetails(response.data);
-            console.log("Actors")
-            console.log(response.data.actors)
+            console.log("Actors");
+            console.log(response.data.actors);
             if (response.data.actors == "") {
                 setActorList(["No actors found"]);
-            }
-            else {
+            } else {
                 setActorList(response.data.actors.split(","));
             }
-            // console.log(actorList);
         } catch (error) {
             console.error(error);
         }
     };
 
+    const handleMouseEnter = () => {
+        setIsHovering(true);
+    };
+
+    const handleMouseLeave = () => {
+        setIsHovering(false);
+    };
+
     return (
-
-        <div key={id} className="movie-item" onClick ={handleDetailsRequest}>
+        <div
+            key={id}
+            className="movie-item"
+            onClick={handleDetailsRequest}
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+        >
             <h2>{title}</h2>
+            {isHovering && (
+                <button
+                    className={`add-button ${isInWatchlist ? "added" : ""}`}
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        toggleWatchlist();
+                    }}
+                >
+                    {isInWatchlist ? "-" : "+"}
+                </button>
+            )}
             <p>{overview}</p>
-
             {showPopup && (
                 <div>
                     <p>Average rating: {extraDetails.rating}</p>
@@ -63,12 +98,7 @@ const Movie = ({title, overview, id}) => {
                 </div>
             )}
         </div>
-
-
     )
-
-
-
 };
 
 function MovieSearch() {

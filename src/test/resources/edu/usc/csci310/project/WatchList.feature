@@ -6,7 +6,7 @@ Feature: Movie Watch Lists
   Scenario: Create a new watch list
     Given I am on the movie search page
     When I hover over a movie search result
-    And I click on the "+" button
+    And I click on the "+" button to the right of the search result
     And I select "Create new list"
     And I enter a name for the new list
     And I select whether to make it public or private
