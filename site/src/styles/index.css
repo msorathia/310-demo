@@ -126,6 +126,18 @@
   margin-top: 5px;
 }
 
+.montage {
+  position: relative;
+  width: 650px;
+  height: 650px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.montage-image {
+  width: 150px;
+}
+
 /* Responsive styles */
 
 @media screen and (max-width: 768px) {

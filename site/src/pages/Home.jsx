@@ -32,6 +32,14 @@ function Home() {
 
             <button
                 onClick={() => {
+                    navigate("/Montage");
+                }}
+            >
+                Go to Montage page
+            </button>
+
+            <button
+                onClick={() => {
                     fetch("/api/ping", {
                         method: "POST",
                         headers: {
