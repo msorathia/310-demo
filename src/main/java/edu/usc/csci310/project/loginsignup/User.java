@@ -6,6 +6,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 
 @Entity
 @Table(name = "users")
@@ -23,12 +28,17 @@ public class User {
     @Column(name = "password")
     private String password;
 
+    @Column(name = "watchlists")
+    private HashMap<String, ArrayList<String>> watchlists;
+
     public User() {}
 
     public User(String name, String email, String password) {
         this.name = name;
         this.email = email;
         this.password = password;
+
+        this.watchlists = new HashMap<String, ArrayList<String>>();
     }
 
     // getters and setters
@@ -64,4 +74,37 @@ public class User {
     public void setPassword(String password) {
         this.password = password;
     }
+
+    public HashMap<String, ArrayList<String>> getAllWatchlists()
+    {
+        return watchlists;
+    }
+
+    public ArrayList<String> getWatchList(String watchlistname)
+    {
+        return watchlists.get(watchlistname);
+    }
+
+    public void createnewList(String watchlistname)
+    {
+        ArrayList<String> newlist = new ArrayList<String>();
+        watchlists.put(watchlistname, newlist);
+    }
+
+    public void addtowatchlist(String id, String listname)
+    {
+        ArrayList<String> retrievedlist = watchlists.get(listname);
+        if(retrievedlist == null)
+        {
+            retrievedlist = new ArrayList<String>();
+            retrievedlist.add(id);
+            watchlists.put(listname, retrievedlist);
+        }
+        else
+        {
+            retrievedlist.add(id);
+        }
+
+    }
+
 }
