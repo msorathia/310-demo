@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import axios from "axios";
 import "../styles/index.css";
 
-
 //Two functions- One for signup and one for login
 //Called by code "on click" or "on submit" (value of on click or on submit is specified by the function)
 //Within functions, create request similar to signUpResponse
@@ -97,7 +96,6 @@ function LoginSignup() {
             }
             }
             catch (error) {
-            console.log("errrorroororoor");
             console.error(error);
         }
     };
@@ -115,6 +113,7 @@ function LoginSignup() {
             <label htmlFor="email">Email</label>
             <input
               type="email"
+              id = "email"
               name="email"
               value={email}
               onChange={(event) => setEmail(event.target.value)}
@@ -123,13 +122,14 @@ function LoginSignup() {
             <label htmlFor="password">Password</label>
             <input
               type="password"
+              id = "password"
               name="password"
               value={password}
               onChange={(event) => setPassword(event.target.value)}
               required
             />
             <button type="submit" onClick={handleLogin}>Login</button>
-            <p>Don&apos;t have an account? <button type="button" onClick={toggleForm}>Sign up</button></p>
+            <p>Don&apos;t have an account? <button type="button" name="Sign Up" onClick={toggleForm}>Sign Up</button></p>
             <div>
                   {LoginsuccessResponse && <p>Login successful, Welcome!</p>}
                   {LoginuserexistsResponse && <p>User does not exist. Please sign up first.</p>}
@@ -142,6 +142,7 @@ function LoginSignup() {
             <label htmlFor="name">Name</label>
             <input
               type="text"
+              id = "name"
               name="name"
               value={name}
               onChange={(event) => setName(event.target.value)}
@@ -150,6 +151,7 @@ function LoginSignup() {
             <label htmlFor="email">Email</label>
             <input
               type="email"
+              id = "email"
               name="email"
               value={email}
               onChange={(event) => setEmail(event.target.value)}
@@ -158,6 +160,7 @@ function LoginSignup() {
             <label htmlFor="password">Password</label>
             <input
               type="password"
+              id = "password"
               name="password"
               value={password}
               onChange={(event) => setPassword(event.target.value)}
@@ -166,6 +169,7 @@ function LoginSignup() {
             <label htmlFor="confirm-password">Confirm Password</label>
             <input
               type="password"
+              id = "confirm-password"
               name="confirm-password"
               value={confirmPassword}
               onChange={(event) => setConfirmPassword(event.target.value)}
@@ -184,7 +188,5 @@ function LoginSignup() {
         </div>
         </div>
   )};
-
-
-
 export default LoginSignup;
+
