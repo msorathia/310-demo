@@ -13,12 +13,9 @@ const Movie = ({ title, overview, id }) => {
         localStorage.getItem(id) === "true"
     );
 
-    const toggleWatchlist = () => {
-        setIsInWatchlist((prev) => {
-            localStorage.setItem(id, !prev);
-            return !prev;
-        });
-    };
+    const [showWatchlistPrompt, setShowWatchlistPrompt] = useState(false);
+    const [newWatchlistName, setNewWatchlistName] = useState("");
+    const [watchlists, setWatchlists] = useState(JSON.parse(localStorage.getItem("watchlists")) || []);
 
     useEffect(() => {
         console.log("Watchlist:", isInWatchlist);
@@ -59,6 +56,33 @@ const Movie = ({ title, overview, id }) => {
         setIsHovering(false);
     };
 
+    const toggleWatchlist = () => {
+        setShowWatchlistPrompt(true);
+    };
+
+    const handleWatchlistPrompt = (option) => {
+        if (option === "new") {
+            const newWatchlist = { name: newWatchlistName, movies: [id] };
+            setWatchlists((prevWatchlists) => {
+                const updatedWatchlists = [...prevWatchlists, newWatchlist];
+                localStorage.setItem("watchlists", JSON.stringify(updatedWatchlists));
+                return updatedWatchlists;
+            });
+        }
+        setNewWatchlistName("");
+        setShowWatchlistPrompt(false);
+    };
+
+    const handleWatchlistSelection = (watchlistIndex) => {
+        setWatchlists((prevWatchlists) => {
+            const updatedWatchlists = [...prevWatchlists];
+            updatedWatchlists[watchlistIndex].movies.push(id);
+            localStorage.setItem("watchlists", JSON.stringify(updatedWatchlists));
+            return updatedWatchlists;
+        });
+        setShowWatchlistPrompt(false);
+    };
+
     return (
         <div
             key={id}
@@ -78,6 +102,24 @@ const Movie = ({ title, overview, id }) => {
                 >
                     {isInWatchlist ? "-" : "+"}
                 </button>
+            )}
+            {showWatchlistPrompt && (
+                <div>
+                    <p>Add to existing watchlist:</p>
+                    {watchlists.map((watchlist, index) => (
+                        <button key={index} onClick={() => handleWatchlistSelection(index)}>
+                            {watchlist.name}
+                        </button>
+                    ))}
+                    <p>Create a new watchlist:</p>
+                    <input
+                        type="text"
+                        value={newWatchlistName}
+                        onChange={(e) => setNewWatchlistName(e.target.value)}
+                    />
+                    <button onClick={() => handleWatchlistPrompt("new")}>Create</button>
+                    <button onClick={() => setShowWatchlistPrompt(false)}>Cancel</button>
+                </div>
             )}
             <p>{overview}</p>
             {showPopup && (
