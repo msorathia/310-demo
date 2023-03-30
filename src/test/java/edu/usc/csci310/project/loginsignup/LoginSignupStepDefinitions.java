@@ -33,30 +33,32 @@ public class LoginSignupStepDefinitions {
         options.addArguments("--disable-extensions");
         driver = new ChromeDriver(options);
     }
+
     @Given("I am on the login signup page")
     public void iAmOnTheLoginSignupPage() {
         driver.get(ROOT_URL + "LoginSignUp");
     }
 
-    @When("I click on the sign up button")
-    public void iClickOnTheSignUpButton() {
+    @When("I click on the sign up button on the login page")
+    public void iClickOnTheSignUpButtonOnTheLoginPage() {
         driver.findElement(By.xpath("//*[@id=\"root\"]/div/div/div/form/p/button")).click();
     }
 
-
     @Then("I should be on the sign up section")
     public void iShouldBeOnTheSignUpSection() {
-        assertTrue(driver.findElement(By.xpath("//*[@id=\"root\"]/div/div/div/form/button")) != null);
+        boolean value = driver.findElement(By.xpath("//*[@id=\"root\"]/div/div/div/form/h2")).getText().equals("Sign Up");
+        assertTrue(value);
     }
 
-    @And("I click on the login button")
-    public void iClickOnTheLoginButton() {
-        driver.findElement(By.xpath("//*[@id=\"root\"]/div/div/div/form/button")).click();
+    @And("I click on the login button on the sign up page")
+    public void iClickOnTheLoginButtonOnTheSignUpPage() {
+        driver.findElement(By.xpath("//*[@id=\"root\"]/div/div/div/form/p/button")).click();
     }
 
     @Then("I should be on the login section")
     public void iShouldBeOnTheLoginSection() {
-        assertTrue(driver.findElement(By.xpath("//*[@id=\"root\"]/div/div/div/form/p/button")) != null);
+        boolean value = driver.findElement(By.xpath("//*[@id=\"root\"]/div/div/div/form/h2")).getText().equals("Login");
+        assertTrue(value);
     }
 
 
@@ -65,37 +67,64 @@ public class LoginSignupStepDefinitions {
 
     }
 
+    @And("I click on the login button on the login page")
+    public void iClickOnTheLoginButtonOnTheLoginPage() {
+        driver.findElement(By.xpath("//*[@id=\"root\"]/div/div/div/form/button")).click();
+    }
+
     @Then("I should see {string} message on the login page")
     public void iShouldSeeMessageOnTheLoginPage(String arg0) {
         assertTrue(driver.getPageSource().contains(arg0));
     }
 
-    @When("I enter no inputs for the email id field")
-    public void iEnterNoInputsForTheEmailIdField() {
-
-    }
-
-    @And("I enter {string} in the password field")
-    public void iEnterInThePasswordField(String arg0) {
+    @And("I enter {string} in log in password field")
+    public void iEnterInLogInSPasswordField(String arg0) {
         driver.findElement(By.xpath("//*[@id=\"root\"]/div/div/div/form/input[2]")).sendKeys(arg0);
     }
 
-
-    @When("I enter no inputs for the password field")
-    public void iEnterNoInputsForThePasswordField() {
-
+    @When("I enter no inputs for the email id field")
+    public void iEnterNoInputsForTheEmailIdField() {
     }
 
-    @And("I enter {string} in the email id field")
-    public void iEnterInTheEmailIdField(String arg0) {
+    @And("I enter {string} in the sign up name field")
+    public void iEnterInTheSignUpNameField(String arg0) {
         driver.findElement(By.xpath("//*[@id=\"root\"]/div/div/div/form/input[1]")).sendKeys(arg0);
     }
 
 
-    @Given("I am on the sign up section")
-    public void iAmOnTheSignUpSection() {
-        driver.findElement(By.xpath("//*[@id=\"root\"]/div/div/div/form/p/button")).click();
+    @And("I enter {string} in the sign up email field")
+    public void iEnterInTheSignUpEmailField(String arg0) {
+        driver.findElement(By.xpath("//*[@id=\"root\"]/div/div/div/form/input[2]")).sendKeys(arg0);
     }
+
+
+    @And("I enter {string} in the sign up password field")
+    public void iEnterInTheSignUpPasswordField(String arg0) {
+        driver.findElement(By.xpath("//*[@id=\"root\"]/div/div/div/form/input[3]")).sendKeys(arg0);
+    }
+
+    @And("I enter {string} in the sign up confirm password field")
+    public void iEnterInTheSignUpConfirmPasswordField(String arg0) {
+        driver.findElement(By.xpath("//*[@id=\"root\"]/div/div/div/form/input[4]")).sendKeys(arg0);
+    }
+
+
+    @And("I click on the sign up button on the sign up page")
+    public void iClickOnTheSignUpButtonOnTheSignUpPage() {
+        driver.findElement(By.xpath("//*[@id=\"root\"]/div/div/div/form/button")).click();
+    }
+
+
+    @And("I enter no inputs for the password field")
+    public void iEnterNoInputsForThePasswordField() {
+
+    }
+
+    @And("I enter {string} in login's email id field")
+    public void iEnterInLoginSEmailIdField(String arg0) {
+        driver.findElement(By.xpath("//*[@id=\"root\"]/div/div/div/form/input[1]")).sendKeys(arg0);
+    }
+
 
     @Then("I should see an automated message on the sign up page while remaining on the sign up page")
     public void iShouldSeeAnAutomatedMessageOnTheSignUpPageWhileRemainingOnTheSignUpPage() {
@@ -108,42 +137,18 @@ public class LoginSignupStepDefinitions {
 
     }
 
-    @And("I enter {string} in the email field")
-    public void iEnterInTheEmailField(String arg0) {
-        driver.findElement(By.xpath("//*[@id=\"root\"]/div/div/div/form/input[2]")).sendKeys(arg0);
-    }
-
-
-    @And("I enter {string} in the password section")
-    public void iEnterInThePasswordSection(String arg0) {
-        driver.findElement(By.xpath("//*[@id=\"root\"]/div/div/div/form/input[3]")).sendKeys(arg0);
-    }
-
-
-    @And("I enter {string} in the confirm password section")
-    public void iEnterInTheConfirmPasswordSection(String arg0) {
-        driver.findElement(By.xpath("//*[@id=\"root\"]/div/div/div/form/input[4]")).sendKeys(arg0);
-    }
-
-
-    @When("I enter {string} in the name field")
-    public void iEnterInTheNameField(String arg0) {
-        driver.findElement(By.xpath("//*[@id=\"root\"]/div/div/div/form/input[1]")).sendKeys(arg0);
-    }
-
-
     @And("I enter nothing in the email field")
     public void iEnterNothingInTheEmailField() {
-        
+
     }
 
     @And("I enter nothing in the password section")
     public void iEnterNothingInThePasswordSection() {
-        
+
     }
 
-    @And("I enter no inputs in the confirm password section")
-    public void iEnterNoInputsInTheConfirmPasswordSection() {
+    @And("I enter no inputs in the confirm password field")
+    public void iEnterNoInputsInTheConfirmPasswordField() {
 
     }
 
