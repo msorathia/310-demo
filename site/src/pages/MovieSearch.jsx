@@ -98,6 +98,7 @@ const Movie = ({ title, overview, id }) => {
                     onClick={(e) => {
                         e.stopPropagation();
                         toggleWatchlist();
+                        //contact back-end and retrieve watchlist names
                     }}
                 >
                     {isInWatchlist ? "-" : "+"}
@@ -110,6 +111,8 @@ const Movie = ({ title, overview, id }) => {
                         <button key={index} onClick={() => handleWatchlistSelection(index)}>
                             {watchlist.name}
                         </button>
+
+                        //send movie ids, watchlist name, user email to back-end
                     ))}
                     <p>Create a new watchlist:</p>
                     <input
