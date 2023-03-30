@@ -37,7 +37,6 @@ public class User {
         this.name = name;
         this.email = email;
         this.password = password;
-
         this.watchlists = new HashMap<String, ArrayList<String>>();
     }
 
@@ -82,27 +81,30 @@ public class User {
 
     public ArrayList<String> getWatchList(String watchlistname)
     {
-        return watchlists.get(watchlistname);
+        if(watchlists != null)
+            return watchlists.get(watchlistname);
+        return null;
     }
 
     public void createnewList(String watchlistname)
     {
         ArrayList<String> newlist = new ArrayList<String>();
+        if(watchlists == null)
+            watchlists = new HashMap<String,ArrayList<String>>();
         watchlists.put(watchlistname, newlist);
     }
 
-    public void addtowatchlist(String id, String listname)
+    public boolean addtowatchlist(String id, String listname)
     {
         ArrayList<String> retrievedlist = watchlists.get(listname);
         if(retrievedlist == null)
         {
-            retrievedlist = new ArrayList<String>();
-            retrievedlist.add(id);
-            watchlists.put(listname, retrievedlist);
+            return false;
         }
         else
         {
             retrievedlist.add(id);
+            return true;
         }
 
     }

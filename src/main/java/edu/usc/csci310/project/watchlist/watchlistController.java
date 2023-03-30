@@ -5,6 +5,7 @@ import edu.usc.csci310.project.loginsignup.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -35,67 +36,35 @@ public class watchlistController {
         return ciphertext.toString();
     }
 
-        public static String decrypt(String ciphertext) {
+    public static String decrypt(String ciphertext) {
             return encrypt(ciphertext, 21);
         }
 
-    @PostMapping("/createwatchlist")
-    public String createwatchlist(@RequestParam String watchlistname, @RequestParam String email) {
-        //encrypting
+    @PostMapping("/createlist")
+    public String createList(@RequestParam String email, @RequestParam String watchlistname, @RequestParam String id)
+    {
         String en_email = encrypt(email, 5);
-
-        User user = userRepository.findByEmail((en_email));
-        if (user != null) {
+        User user = userRepository.findByEmail(en_email);
+        if(user != null) {
             String en_name = encrypt(watchlistname, 5);
-
-            HashMap<String, ArrayList<String>> alllists = user.getAllWatchlists();
-            ArrayList<String> specificlist = alllists.get(en_name);
+            ArrayList<String> specificlist = user.getWatchList(en_name);
             if (specificlist == null) {
                 user.createnewList(en_name);
+                user.addtowatchlist(encrypt(id, 5), en_name);
                 String responseString = "{\"success\": \"" + "true" + "\"," +
                         "\"failure\": \"" + "false" + "\"}";
                 return responseString;
             } else {
                 String responseString = "{\"success\": \"" + "false" + "\"," +
+                        "\"alreadyexists\": \"" + "true" + "\"," +
                         "\"failure\": \"" + "true" + "\"}";
                 return responseString;
             }
         }
         String responseString = "{\"success\": \"" + "false" + "\"," +
+                "\"alreadyexists\": \"" + "false" + "\"," +
                 "\"failure\": \"" + "true" + "\"}";
         return responseString;
-    }
-
-    @PostMapping("/retrievelist")
-    public String retrieveList(@RequestParam String email, @RequestParam String watchlistname)
-    {
-        String en_email = encrypt(email, 5);
-        User user = userRepository.findByEmail((en_email));
-        if(user != null)
-        {
-            String en_name = encrypt(watchlistname, 5);
-
-            HashMap<String, ArrayList<String>> alllists = user.getAllWatchlists();
-            ArrayList<String> specificlist = alllists.get(en_name);
-            if(specificlist == null)
-            {
-                return "";
-            }
-            else
-            {
-               String id = "";
-               String responseString = "[ ";
-               for(int i = 0; i < specificlist.size(); i++)
-                {
-                    String encrypted_id = specificlist.get(i);
-                    responseString = responseString + decrypt(encrypted_id) + ", ";
-                }
-               responseString = responseString + "]";
-               return responseString;
-            }
-
-        }
-        return "";
     }
 
 
@@ -103,12 +72,17 @@ public class watchlistController {
     public String addtolist(@RequestParam String email, @RequestParam String watchlistname, @RequestParam String id)
     {
         String en_email = encrypt(email, 5);
-
-        User user = userRepository.findByEmail((en_email));
+        User user = userRepository.findByEmail(en_email);
         if(user != null)
         {
             String en_name = encrypt(watchlistname, 5);
             HashMap<String, ArrayList<String>> alllists = user.getAllWatchlists();
+            if(alllists == null)
+            {
+                String responseString = "{\"success\": \"" + "false" + "\"," +
+                        "\"failure\": \"" + "true" + "\"}";
+                return responseString;
+            }
             ArrayList<String> specificlist = alllists.get(en_name);
             if(specificlist == null)
             {
@@ -117,14 +91,41 @@ public class watchlistController {
                 return responseString;
             }
             else {
-                user.addtowatchlist(id, encrypt(watchlistname, 5));
-                String responseString = "{\"success\": \"" + "true" + "\"," +
-                        "\"failure\": \"" + "false" + "\"}";
-                return responseString;
+                boolean answer = user.addtowatchlist(en_name, encrypt(id, 5));
+                if(answer == true) {
+                    String responseString = "{\"success\": \"" + "true" + "\"," +
+                            "\"failure\": \"" + "false" + "\"}";
+                    return responseString;
+                }
             }
         }
         String responseString = "{\"success\": \"" + "false" + "\"," +
                 "\"failure\": \"" + "true" + "\"}";
         return responseString;
+    }
+
+    @PostMapping("/showlists")
+    public String showallLists(@RequestParam String email)
+    {
+        String en_email = encrypt(email, 5);
+        User user = userRepository.findByEmail(en_email);
+        if(user != null)
+        {
+            String alllistnames = "[ ";
+            HashMap<String, ArrayList<String>> allnames = user.getAllWatchlists();
+            if(allnames == null)
+                return "[]";
+            if(allnames.isEmpty())
+                return "[]";
+
+            for(String key: allnames.keySet())
+            {
+                alllistnames = alllistnames + decrypt(key) + ", ";
+            }
+
+            alllistnames = alllistnames.substring(0,alllistnames.length()-2) + "]";
+            return alllistnames;
+        }
+        return "[]";
     }
 }
