@@ -1,12 +1,20 @@
 import React from 'react';
 import { render, screen, act } from '@testing-library/react';
 import axios from 'axios';
-import Montage from './Montage';
+import Montage from '../pages/Montage';
+import { BrowserRouter as Router } from "react-router-dom";
 
 jest.mock('axios');
 
 beforeEach(() => {
     fetch.resetMocks();
+    const mockedUsedNavigate = jest.fn();
+
+    jest.mock('react-router-dom', () => ({
+        ...jest.requireActual('react-router-dom'),
+        useNavigate: () => mockedUsedNavigate,
+    }));
+
 });
 
 test("image list is retrieved", async () => {
@@ -51,7 +59,7 @@ test("image list is retrieved", async () => {
     });
 
     await act(async () => {
-        render(<Montage />);
+        render(<Router><Montage /></Router>);
     });
 
     expect(screen.getByText('Montage')).toBeInTheDocument();

@@ -2,16 +2,26 @@ package edu.usc.csci310.project;
 
 import io.cucumber.java.Before;
 import io.cucumber.java.BeforeAll;
+import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
+import java.time.Duration;
+import java.util.List;
+
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class MovieSearchStepDefinitions {
@@ -22,12 +32,14 @@ public class MovieSearchStepDefinitions {
     @BeforeAll
     public static void beforeAll() {
         System.out.println("Setting Up Driver");
-        WebDriverManager.chromedriver().setup();
+        System.setProperty("webdriver.http.factory", "jdk-http-client");
+        WebDriverManager.chromedriver().driverVersion("110.0.5481").setup();
     }
 
     @Before
     public void before() {
         ChromeOptions options = new ChromeOptions();
+        options.addArguments("--headless");
         options.addArguments("--whitelisted-ips");
         options.addArguments("--no-sandbox");
         options.addArguments("--disable-extensions");
@@ -39,9 +51,9 @@ public class MovieSearchStepDefinitions {
         driver.get(ROOT_URL + "MovieSearch");
     }
 
-    @When("I search for {string}")
-    public void iSearchFor(String searchTerm) {
-        driver.findElement(By.xpath("/html/body/div[1]/div/div/form/div[2]/input")).sendKeys(searchTerm);
+    @When("I search for {string} using the Enter key with the keyword radio button pressed")
+    public void iSearchForUsingTheEnterKeyWithTheRadioButtonPressed(String arg0) {
+        driver.findElement(By.xpath("/html/body/div[1]/div/div/form/div[2]/input")).sendKeys(arg0);
         driver.findElement(By.xpath("/html/body/div[1]/div/div/form/div[2]/button")).click();
     }
 
@@ -82,5 +94,67 @@ public class MovieSearchStepDefinitions {
     @Then("the movie details popup should close")
     public void theMovieDetailsPopupShouldClose() {
         assertEquals(false, driver.findElement(By.xpath("//*[@id=\"root\"]/div/div/div/div[0]/div/p[1]")).getText().contains("rating"));
+    }
+
+
+    @When("I search for {string} using the Enter key")
+    public void iSearchForUsingTheEnterKey(String arg0) {
+        driver.findElement(By.xpath("/html/body/div[1]/div/div/form/div[2]/input")).sendKeys(arg0);
+        driver.findElement(By.xpath("/html/body/div[1]/div/div/form/div[2]/input")).sendKeys(Keys.ENTER);
+
+    }
+
+    @And("I press the keyword radio button")
+    public void iPressTheKeywordRadioButton() {
+        driver.findElement(By.cssSelector("#root > div > div > form > div:nth-child(1) > label:nth-child(1) > input[type=radio]")).click();
+    }
+
+    @Then("I should see a list of search results that includes {string}")
+    public void iShouldSeeAListOfSearchResultsThatIncludes(String arg0) {
+        assertTrue(driver.getPageSource().contains(arg0));
+    }
+
+    @And("I search for {string} using the Search button")
+    public void iSearchForUsingTheSearchButton(String arg0) {
+        driver.findElement(By.xpath("/html/body/div[1]/div/div/form/div[2]/input")).sendKeys(arg0);
+        driver.findElement(By.xpath("/html/body/div[1]/div/div/form/div[2]/button")).click();
+    }
+
+    @When("I press the actor radio button")
+    public void iPressTheActorRadioButton() {
+        driver.findElement(By.cssSelector("#root > div > div > form > div:nth-child(1) > label:nth-child(2) > input[type=radio]")).click();
+    }
+
+    @And("I click on the first Search Result")
+    public void iClickOnTheFirstSearchResult() {
+        Duration d = Duration.ofSeconds(20);
+        new WebDriverWait(driver, d).until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[@id=\"root\"]/div/div/div/div[1]")));
+        driver.findElement(By.xpath("//*[@id=\"root\"]/div/div/div/div[1]")).click();
+    }
+
+    @When("I press the title radio button")
+    public void iPressTheTitleRadioButton() {
+        driver.findElement(By.cssSelector("#root > div > div > form > div:nth-child(1) > label:nth-child(3) > input[type=radio]")).click();
+    }
+
+    @Then("I should see {string} on the page")
+    public void iShouldSeeOnThePage(String arg0) {
+        assertTrue(driver.getPageSource().contains(arg0));
+    }
+
+    @Then("I should not see {string} on the page")
+    public void iShouldNotSeeOnThePage(String arg0) {
+        assertFalse(driver.getPageSource().contains(arg0));
+    }
+
+
+    @Then("The list should be scrollable")
+    public void theListShouldBeScrollable() {
+        assertTrue(driver.findElement(By.cssSelector("#root > div > div > div > div:nth-child(1) > div > div > div")).getCssValue("overflow-y").equals("scroll"));
+    }
+
+    @Then("The list should not be scrollable")
+    public void theListShouldNotBeScrollable() {
+        assertTrue(driver.findElement(By.cssSelector("#root > div > div > div > div:nth-child(1) > div > div > div")).getCssValue("overflow-y").equals("scroll"));
     }
 }

@@ -21,7 +21,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "react-scripts test --transformIgnorePatterns \"node_modules/(?!@codemirror)/\"",
     "eject": "react-scripts eject",
     "pretty": "prettier --check \"src/**/*.{js,ts,jsx,tsx}\"",
     "fix:pretty": "prettier --write \"src/**/*.{js,ts,jsx,tsx}\""
@@ -66,6 +66,9 @@
       "src/**/*.{js,jsx,ts,tsx}",
       "!src/index.js",
       "!src/reportWebVitals.js"
-    ]
+    ],
+    "transform": {
+      "^.+\\.(ts|tsx|js|jsx)$": "babel-jest"
+    }
   }
 }
