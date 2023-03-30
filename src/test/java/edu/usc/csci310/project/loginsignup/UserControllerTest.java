@@ -1,7 +1,6 @@
 package edu.usc.csci310.project.loginsignup;
 
 import org.junit.Test;
-import org.mockito.stubbing.OngoingStubbing;
 
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.anyString;
