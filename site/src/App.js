@@ -3,6 +3,7 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import Home from "./pages/Home";
 import Other from "./pages/Other";
 import MovieSearch from "./pages/MovieSearch";
+import Montage from "./pages/Montage";
 
 function App() {
     return (
@@ -12,6 +13,7 @@ function App() {
                 <Route path="/" element={<Home />} />
                 <Route path="/other" element={<Other />} />
                 <Route exact path="/MovieSearch" element={<MovieSearch />} />
+                <Route exact path="/Montage" element={<Montage />} />
                 {/* 404 page not found redirect */}
                 <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
