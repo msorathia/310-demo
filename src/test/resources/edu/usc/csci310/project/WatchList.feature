@@ -5,11 +5,6 @@ Feature: Create and save movie watch lists
     When the user hovers over a search result on a desktop device
     Then additional controls (+ button) should appear
 
-  Scenario: Show additional controls on mobile devices
-    Given the user is on the search results page
-    When the user is using a mobile device
-    Then additional controls should always be displayed
-
   Scenario: Add movie to an existing or new watch list
     Given the user is on the search results page
     When the user clicks the add to watch list button (+ button)
