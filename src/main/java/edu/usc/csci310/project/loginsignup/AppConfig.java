@@ -8,16 +8,16 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 @Configuration
 public class AppConfig {
     @Value("jdbc:mysql://localhost:3306/db?createDatabaseIfNotExist=true")
-    private String datasourceUrl;
+    public String datasourceUrl;
 
     @Value("root")
-    private String username;
+    public String username;
 
     @Value("root")
-    private String password;
+    public String password;
 
     @Value("${spring.datasource.driver-class-name}")
-    private String driverClassName;
+    public String driverClassName;
 
     @Bean
     public DriverManagerDataSource dataSource() {

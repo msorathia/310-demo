@@ -1,6 +1,7 @@
 package edu.usc.csci310.project.loginsignup;
 
-import org.junit.Test;
+
+import org.junit.jupiter.api.Test;
 
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.anyString;

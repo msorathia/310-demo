@@ -12,6 +12,11 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.time.Duration;
+
 import static org.junit.Assert.assertTrue;
 
 
@@ -23,7 +28,7 @@ public class LoginSignupStepDefinitions {
     @BeforeAll
     public static void beforeAll() {
         System.out.println("Setting Up Driver");
-        WebDriverManager.chromedriver().setup();
+        WebDriverManager.chromedriver().driverVersion("110.0.5481").setup();
         //WebDriverManager.chromedriver().setup();
     }
 
@@ -39,6 +44,7 @@ public class LoginSignupStepDefinitions {
         options.addArguments("--whitelisted-ips");
         options.addArguments("--no-sandbox");
         options.addArguments("--disable-extensions");
+        options.addArguments("--remote-allow-origins=*");
         driver = new ChromeDriver(options);
     }
 
@@ -82,11 +88,16 @@ public class LoginSignupStepDefinitions {
 
     @Then("I should see {string} message on the login page")
     public void iShouldSeeMessageOnTheLoginPage(String arg0) {
-        assertTrue(driver.getPageSource().contains(arg0));
+        Duration d = Duration.ofSeconds(20);
+        new WebDriverWait(driver, d).until(ExpectedConditions.presenceOfElementLocated(By.xpath("/html/body/div/div/div/div/form/div/p")));
+        assertTrue(driver.findElement(By.xpath("/html/body/div/div/div/div/form/div/p")).getText().equals(arg0));
     }
 
     @And("I enter {string} in log in password field")
     public void iEnterInLogInSPasswordField(String arg0) {
+        driver.findElement(By.xpath("//*[@id=\"root\"]/div/div/div/form/input[2]")).clear();
+        Duration d = Duration.ofSeconds(20);
+        new WebDriverWait(driver, d).until(ExpectedConditions.textToBePresentInElementValue(By.xpath("//*[@id=\"root\"]/div/div/div/form/input[2]"), ""));
         driver.findElement(By.xpath("//*[@id=\"root\"]/div/div/div/form/input[2]")).sendKeys(arg0);
     }
 
@@ -150,9 +161,9 @@ public class LoginSignupStepDefinitions {
 
     }
 
-    @And("I enter nothing in the password section")
-    public void iEnterNothingInThePasswordSection() {
-
+    @And("I enter nothing in the login password field")
+    public void iEnterNothingInTheLoginPasswordField() {
+        driver.findElement(By.xpath("//*[@id=\"password\"]")).clear();
     }
 
     @And("I enter no inputs in the confirm password field")
@@ -162,6 +173,71 @@ public class LoginSignupStepDefinitions {
 
     @Then("I should see {string} message on the sign up page")
     public void iShouldSeeMessageOnTheSignUpPage(String arg0) {
-        assertTrue(driver.getPageSource().contains(arg0));
+        Duration d = Duration.ofSeconds(20);
+        new WebDriverWait(driver, d).until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[@id=\"root\"]/div/div/div/form/div/p")));
+        assertTrue(driver.findElement(By.xpath("//*[@id=\"root\"]/div/div/div/form/div/p")).getText().equals(arg0));
+    }
+
+    @And("I enter {string} in login's email id field again")
+    public void iEnterInLoginSEmailIdFieldAgain(String arg0) {
+        driver.findElement(By.xpath("//*[@id=\"email\"]")).clear();
+        driver.findElement((By.xpath("//*[@id=\"email\"]"))).sendKeys(arg0);
+    }
+
+    @And("I enter {string} in log in password field again")
+    public void iEnterInLogInPasswordFieldAgain(String arg0) {
+        driver.findElement(By.xpath("//*[@id=\"root\"]/div/div/div/form/input[2]")).clear();
+        driver.findElement(By.xpath("//*[@id=\"root\"]/div/div/div/form/input[2]")).sendKeys(arg0);
+    }
+
+    @And("I enter {string} in the sign up name field again")
+    public void iEnterInTheSignUpNameFieldAgain(String arg0) {
+        driver.findElement(By.xpath("//*[@id=\"root\"]/div/div/div/form/input[1]")).clear();
+        driver.findElement(By.xpath("//*[@id=\"root\"]/div/div/div/form/input[1]")).sendKeys(arg0);
+    }
+
+    @And("I enter {string} in the sign up email field again")
+    public void iEnterInTheSignUpEmailFieldAgain(String arg0) {
+        driver.findElement(By.xpath("//*[@id=\"root\"]/div/div/div/form/input[2]")).clear();
+        driver.findElement(By.xpath("//*[@id=\"root\"]/div/div/div/form/input[2]")).sendKeys(arg0);
+    }
+
+    @And("I enter {string} in the sign up password field again")
+    public void iEnterInTheSignUpPasswordFieldAgain(String arg0) {
+        driver.findElement(By.xpath("//*[@id=\"root\"]/div/div/div/form/input[3]")).clear();
+        driver.findElement(By.xpath("//*[@id=\"root\"]/div/div/div/form/input[3]")).sendKeys(arg0);
+    }
+
+    @And("I enter {string} in the sign up confirm password field again")
+    public void iEnterInTheSignUpConfirmPasswordFieldAgain(String arg0) {
+        driver.findElement(By.xpath("//*[@id=\"root\"]/div/div/div/form/input[4]")).clear();
+        driver.findElement(By.xpath("//*[@id=\"root\"]/div/div/div/form/input[4]")).sendKeys(arg0);
+    }
+
+    @And("I wait for the successful sign up message")
+    public void iWaitForTheSuccessfulSignUpMessage() {
+        Duration d = Duration.ofSeconds(20);
+        new WebDriverWait(driver, d).until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[@id=\"root\"]/div/div/div/form/div/p")));
+    }
+
+    @And("I click on the login button on the login page with empty password")
+    public void iClickOnTheLoginButtonOnTheLoginPageWithEmptyPassword() {
+        driver.findElement(By.xpath("//*[@id=\"password\"]")).clear();
+        driver.findElement(By.xpath("//*[@id=\"password\"]")).sendKeys("");
+        Duration d = Duration.ofSeconds(30);
+        new WebDriverWait(driver, d).until(ExpectedConditions.textToBePresentInElementValue(By.xpath("//*[@id=\"password\"]"), ""));
+        driver.findElement(By.xpath("//*[@id=\"root\"]/div/div/div/form/button")).click();
+
+    }
+
+    @And("I enter nothing in the password field")
+    public void iEnterNothingInThePasswordField() {
+    }
+
+    @And("I click on the sign up button on the sign up page with expectation of message")
+    public void iClickOnTheSignUpButtonOnTheSignUpPageWithExpectationOfMessage() {
+        driver.findElement(By.xpath("//*[@id=\"root\"]/div/div/div/form/button")).click();
+        Duration d = Duration.ofSeconds(20);
+        new WebDriverWait(driver, d).until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[@id=\"root\"]/div/div/div/form/div/p")));
     }
 }

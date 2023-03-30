@@ -25,41 +25,35 @@ Feature: Testing login signup page
 
   Scenario: Testing the login page with just the password field empty
     Given I am on the login signup page
-    When I click on the sign up button on the login page
-    And I enter "tester1" in the sign up name field
-    And I enter "testing1@usc.edu" in the sign up email field
-    And I enter "12345678" in the sign up password field
-    And I enter "12345678" in the sign up confirm password field
-    And I click on the sign up button on the sign up page
-    And I click on the login button on the sign up page
-    And I enter no inputs for the password field
-    And I enter "testing1@usc.edu" in login's email id field
-    And I click on the login button on the login page
-    Then I should see "User exists but your password is incorrect" message on the login page
+    And I enter "testing1@usc.edu" in login's email id field again
+    And I click on the login button on the login page with empty password
+    Then I should see "User does not exist. Please sign up first." message on the login page
 
   Scenario: Testing the login page with both email and password filled but user was not signed up for
     Given I am on the login signup page
     When I enter "failed@usc.edu" in login's email id field
     And I enter "12345678" in log in password field
+    And I click on the login button on the login page
     Then I should see "User does not exist. Please sign up first." message on the login page
 
   Scenario: Testing login page with entering email id only but user was signed up
     Given I am on the login signup page
     When I enter "doesnotexist@usc.edu" in login's email id field
     And I enter no inputs for the password field
+    And I click on the login button on the login page
     Then I should see "User does not exist. Please sign up first." message on the login page
 
-  Scenario: Testing the login page with just the password field empty but user was signed up for
+  Scenario: Testing the login page with incorrect password field empty but user was signed up for
     Given I am on the login signup page
     When I click on the sign up button on the login page
     And I enter "testerpassword" in the sign up name field
     And I enter "testingpassword@usc.edu" in the sign up email field
     And I enter "12345678" in the sign up password field
     And I enter "12345678" in the sign up confirm password field
-    And I click on the sign up button on the sign up page
+    And I click on the sign up button on the sign up page with expectation of message
     And I click on the login button on the sign up page
-    And I enter "12345678" in log in password field
-    And I enter no inputs for the email id field
+    And I enter "testingpassword@usc.edu" in login's email id field again
+    And I enter "123" in log in password field again
     And I click on the login button on the login page
     Then I should see "User exists but your password is incorrect" message on the login page
 
@@ -71,10 +65,11 @@ Feature: Testing login signup page
     And I enter "testing2@usc.edu" in the sign up email field
     And I enter "12345678" in the sign up password field
     And I enter "12345678" in the sign up confirm password field
-    And I click on the sign up button on the sign up page
+    And I click on the sign up button on the sign up page with expectation of message
     And I click on the login button on the sign up page
-    And I enter "testing2" in login's email id field
-    And I enter "12345678@usc.edu" in log in password field
+    And I enter "testing2@usc.edu" in login's email id field again
+    And I enter "12345678" in log in password field again
+    And I click on the login button on the login page
     Then I should see "Login successful, Welcome!" message on the login page
 
   Scenario: Testing the sign up page with no inputs
@@ -108,7 +103,7 @@ Feature: Testing login signup page
     When I click on the sign up button on the login page
     And I enter "dummy" in the sign up name field
     And I enter "dummy2@usc.edu" in the sign up email field
-    And I enter nothing in the password section
+    And I enter nothing in the password field
     And I enter "12345678" in the sign up confirm password field
     And I click on the sign up button on the sign up page
     Then I should see an automated message on the sign up page while remaining on the sign up page
@@ -151,11 +146,11 @@ Feature: Testing login signup page
     And I enter "12345678" in the sign up password field
     And I enter "12345678" in the sign up confirm password field
     And I click on the sign up button on the sign up page
-    And I enter "dummy2" in the sign up name field
-    And I enter "duplicate@usc.edu" in the sign up email field
-    And I enter "123456789" in the sign up password field
-    And I enter "123456789" in the sign up confirm password field
-    And I click on the sign up button on the sign up page
+    And I enter "dummy2" in the sign up name field again
+    And I enter "duplicate@usc.edu" in the sign up email field again
+    And I enter "123456789" in the sign up password field again
+    And I enter "123456789" in the sign up confirm password field again
+    And I click on the sign up button on the sign up page with expectation of message
     Then I should see "User already exists" message on the sign up page
 
   Scenario: Testing sign up page with password length less than 8
@@ -165,8 +160,8 @@ Feature: Testing login signup page
     And I enter "passwordlength@usc.edu" in the sign up email field
     And I enter "12345" in the sign up password field
     And I enter "12345" in the sign up confirm password field
-    And I click on the sign up button on the sign up page
-    Then I should see "Password is less than 8 characters " message on the sign up page
+    And I click on the sign up button on the sign up page with expectation of message
+    Then I should see "Password is less than 8 characters" message on the sign up page
 
   Scenario: Testing sign up page with passwords not matching
     Given I am on the login signup page
@@ -175,7 +170,7 @@ Feature: Testing login signup page
     And I enter "passwordmismatch@usc.edu" in the sign up email field
     And I enter "12345" in the sign up password field
     And I enter "123456" in the sign up confirm password field
-    And I click on the sign up button on the sign up page
+    And I click on the sign up button on the sign up page with expectation of message
     Then I should see "Passwords do not match." message on the sign up page
 
   Scenario: Testing the sign up page with valid inputs
@@ -185,6 +180,6 @@ Feature: Testing login signup page
     And I enter "dummy4@usc.edu" in the sign up email field
     And I enter "12345678" in the sign up password field
     And I enter "12345678" in the sign up confirm password field
-    And I click on the sign up button on the sign up page
+    And I click on the sign up button on the sign up page with expectation of message
     Then I should see "Sign Up Successful!" message on the sign up page
 

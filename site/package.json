@@ -68,7 +68,8 @@
   "jest": {
     "collectCoverageFrom": [
       "src/**/*.{js,jsx,ts,tsx}",
-      "!<rootDir>/node_modules/"
+      "!src/index.js",
+      "!src/reportWebVitals.js"
     ],
     "coverageThreshold": {
       "global": {
