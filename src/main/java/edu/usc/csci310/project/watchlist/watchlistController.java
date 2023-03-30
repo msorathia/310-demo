@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Hashtable;
 
 @RestController
 @RequestMapping("/watchlistController")
@@ -48,7 +49,7 @@ public class watchlistController {
         if (user != null) {
             String en_name = encrypt(watchlistname, 5);
 
-            HashMap<String, ArrayList<String>> alllists = user.getAllWatchlists();
+            Hashtable<String, ArrayList<String>> alllists = user.getAllWatchlists();
             ArrayList<String> specificlist = alllists.get(en_name);
             if (specificlist == null) {
                 user.createnewList(en_name);
@@ -75,7 +76,7 @@ public class watchlistController {
         {
             String en_name = encrypt(watchlistname, 5);
 
-            HashMap<String, ArrayList<String>> alllists = user.getAllWatchlists();
+            Hashtable<String, ArrayList<String>> alllists = user.getAllWatchlists();
             ArrayList<String> specificlist = alllists.get(en_name);
             if(specificlist == null)
             {
@@ -108,7 +109,7 @@ public class watchlistController {
         if(user != null)
         {
             String en_name = encrypt(watchlistname, 5);
-            HashMap<String, ArrayList<String>> alllists = user.getAllWatchlists();
+            Hashtable<String, ArrayList<String>> alllists = user.getAllWatchlists();
             ArrayList<String> specificlist = alllists.get(en_name);
             if(specificlist == null)
             {

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.List;
 
 
@@ -29,7 +30,7 @@ public class User {
     private String password;
 
     @Column(name = "watchlists")
-    private HashMap<String, ArrayList<String>> watchlists;
+    private Hashtable<String, ArrayList<String>> watchlists;
 
     public User() {}
 
@@ -37,7 +38,7 @@ public class User {
         this.name = name;
         this.email = email;
         this.password = password;
-        this.watchlists = new HashMap<String, ArrayList<String>>();
+        this.watchlists = new Hashtable<String, ArrayList<String>>();
     }
 
     // getters and setters
@@ -74,7 +75,7 @@ public class User {
         this.password = password;
     }
 
-    public HashMap<String, ArrayList<String>> getAllWatchlists()
+    public Hashtable<String, ArrayList<String>> getAllWatchlists()
     {
         return watchlists;
     }
@@ -90,7 +91,7 @@ public class User {
     {
         ArrayList<String> newlist = new ArrayList<String>();
         if(watchlists == null)
-            watchlists = new HashMap<String,ArrayList<String>>();
+            watchlists = new Hashtable<String,ArrayList<String>>();
         watchlists.put(watchlistname, newlist);
     }
 
