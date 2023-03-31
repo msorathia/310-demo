@@ -3,11 +3,35 @@ package edu.usc.csci310.project.loginsignup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Hashtable;
+
 @RestController
 @RequestMapping("/userController")
 public class UserController {
-    @Autowired
-    public UserRepository userRepository;
+    //@Autowired
+    //public UserRepository userRepository;
+    public Hashtable<String, User> userdatabase;
+
+    public static String encrypt(String plaintext, int shift) {
+        StringBuilder ciphertext = new StringBuilder();
+        for (int i = 0; i < plaintext.length(); i++) {
+            char c = plaintext.charAt(i);
+            if (Character.isLetter(c)) {
+                if (Character.isUpperCase(c)) {
+                    ciphertext.append((char) ('A' + (c - 'A' + shift) % 26));
+                } else {
+                    ciphertext.append((char) ('a' + (c - 'a' + shift) % 26));
+                }
+            } else if (Character.isDigit(c))
+            {
+                ciphertext.append((char) ('0' + (c - '0' + shift) % 10));
+            } else
+            {
+                ciphertext.append(c);
+            }
+        }
+        return ciphertext.toString();
+    }
 
     @PostMapping("/signup")
     public String signUp(@RequestParam String name, @RequestParam String email, @RequestParam String password, @RequestParam String confirmPassword) {
@@ -24,27 +48,12 @@ public class UserController {
         }
         else {
             //encrypting
-            String en_name = "";
-            String en_password = "";
-            String en_email = "";
-            for (int i = 0; i < name.length(); i++) {
-                char ch = name.charAt(i);
-                int ascii_val = (ch + 5) % 100;
-                en_name = en_name + Integer.toString(ascii_val);
-            }
+            String en_name = encrypt(name, 5);
+            String en_password = encrypt(password,5 );
+            String en_email = encrypt(email, 5);
 
-            for (int i = 0; i < email.length(); i++) {
-                char ch = email.charAt(i);
-                int ascii_val = (ch + 5) % 100;
-                en_email = en_email + Integer.toString(ascii_val);
-            }
-            for (int i = 0; i < password.length(); i++) {
-                char ch = password.charAt(i);
-                int ascii_val = (ch + 5) % 100;
-                en_password = en_password + Integer.toString(ascii_val);
-            }
             // long emailid = Long.parseLong(en_email);
-            if(userRepository.findByEmail(en_email) != null)
+            if(userdatabase.get(en_email) == null)
             {
                 String responseString = "{\"success\": \"" + "failure" + "\"," +
                         "\"passwordmatch\": \"" + "true" + "\"," +
@@ -54,7 +63,7 @@ public class UserController {
             }
 
             User user = new User(en_name, en_email, en_password);
-            userRepository.save(user);
+            userdatabase.put(en_email, user);
             String responseString = "{\"success\": \"" + "true" + "\"}";
             return responseString;
         }
@@ -62,26 +71,16 @@ public class UserController {
 
     @PostMapping("/login")
     public String login(@RequestParam String email, @RequestParam String password) {
-        String en_email = "";
-        for (int i = 0; i < email.length(); i++) {
-            char ch = email.charAt(i);
-            int ascii_val = (ch + 5) % 100;
-            en_email = en_email + Integer.toString(ascii_val);
-        }
-        User user = userRepository.findByEmail(en_email);
+        String en_email = encrypt(email, 5);
+        User user = userdatabase.get(en_email);
 
         if (user == null) {
             String responseString = "{\"success\": \"" + "failure" + "\"," +
                     "\"loginuserexists\": \"" + "false" + "\"}";
             return responseString;
         }
-        String en_password = "";
-        for(int i = 0; i < password.length(); i++)
-        {
-            char ch = password.charAt(i);
-            int ascii_val = (ch + 5)%100;
-            en_password = en_password + Integer.toString(ascii_val);
-        }
+        String en_password = encrypt(password, 5);
+
         if (!user.getPassword().equals(en_password)) {
             String responseString = "{\"success\": \"" + "failure" + "\"," +
                     "\"loginpasswordmatch\":\"" + "false" + "\"," +
