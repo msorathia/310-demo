@@ -2,7 +2,6 @@ package edu.usc.csci310.project.watchlist;
 
 import edu.usc.csci310.project.loginsignup.User;
 import edu.usc.csci310.project.loginsignup.UserController;
-import edu.usc.csci310.project.loginsignup.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,8 +12,7 @@ import java.util.Hashtable;
 @RestController
 @RequestMapping("/watchlistController")
 public class watchlistController {
-    @Autowired
-    public UserRepository userRepository;
+    public Hashtable<String, User> userdatabase = new Hashtable<String, User>();
 
     public static String encrypt(String plaintext, int shift) {
         StringBuilder ciphertext = new StringBuilder();
@@ -48,7 +46,7 @@ public class watchlistController {
         userController.signUp("john", "dummywatchlist@usc.edu", "1234", "1234");
         String en_email = encrypt(email, 5);
 
-        User user = userRepository.findByEmail((en_email));
+        User user = userdatabase.get(en_email);
         if (user != null) {
             String en_name = encrypt(watchlistname, 5);
 
@@ -77,7 +75,7 @@ public class watchlistController {
         userController.signUp("john", "dummywatchlist@usc.edu", "1234", "1234");
         //userController.userRepository = userRepository;
         String en_email = encrypt(email, 5);
-        User user = userRepository.findByEmail((en_email));
+        User user = userdatabase.get(en_email);
         if(user != null)
         {
             String en_name = encrypt(watchlistname, 5);
@@ -115,7 +113,7 @@ public class watchlistController {
         String en_email = encrypt(email, 5);
         System.out.println(email + watchlistname + id);
 
-        User user = userRepository.findByEmail(en_email);
+        User user = userdatabase.get(en_email);
         if(user != null)
         {
             System.out.println("Entered");
