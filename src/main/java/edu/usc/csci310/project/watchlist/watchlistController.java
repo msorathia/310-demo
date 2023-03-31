@@ -1,18 +1,18 @@
 package edu.usc.csci310.project.watchlist;
 
 import edu.usc.csci310.project.loginsignup.User;
-import edu.usc.csci310.project.loginsignup.UserRepository;
+import edu.usc.csci310.project.loginsignup.UserController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Hashtable;
 
 @RestController
 @RequestMapping("/watchlistController")
 public class watchlistController {
-    @Autowired
-    public UserRepository userRepository;
+    public Hashtable<String, User> userdatabase = new Hashtable<String, User>();
 
     public static String encrypt(String plaintext, int shift) {
         StringBuilder ciphertext = new StringBuilder();
@@ -40,15 +40,17 @@ public class watchlistController {
     }
 
     @PostMapping("/createwatchlist")
-    public String createwatchlist(@RequestParam String watchlistname, @RequestParam String email) {
+    public String createList(@RequestParam String watchlistname, @RequestParam String email) {
         //encrypting
+        UserController userController = new UserController();
+        userController.signUp("john", "dummywatchlist@usc.edu", "1234", "1234");
         String en_email = encrypt(email, 5);
 
-        User user = userRepository.findByEmail((en_email));
+        User user = userdatabase.get(en_email);
         if (user != null) {
             String en_name = encrypt(watchlistname, 5);
 
-            HashMap<String, ArrayList<String>> alllists = user.getAllWatchlists();
+            Hashtable<String, ArrayList<String>> alllists = user.getAllWatchlists();
             ArrayList<String> specificlist = alllists.get(en_name);
             if (specificlist == null) {
                 user.createnewList(en_name);
@@ -69,13 +71,16 @@ public class watchlistController {
     @PostMapping("/retrievelist")
     public String retrieveList(@RequestParam String email, @RequestParam String watchlistname)
     {
+        UserController userController = new UserController();
+        userController.signUp("john", "dummywatchlist@usc.edu", "1234", "1234");
+        //userController.userRepository = userRepository;
         String en_email = encrypt(email, 5);
-        User user = userRepository.findByEmail((en_email));
+        User user = userdatabase.get(en_email);
         if(user != null)
         {
             String en_name = encrypt(watchlistname, 5);
 
-            HashMap<String, ArrayList<String>> alllists = user.getAllWatchlists();
+            Hashtable<String, ArrayList<String>> alllists = user.getAllWatchlists();
             ArrayList<String> specificlist = alllists.get(en_name);
             if(specificlist == null)
             {
@@ -102,24 +107,31 @@ public class watchlistController {
     @PostMapping("/addtolist")
     public String addtolist(@RequestParam String email, @RequestParam String watchlistname, @RequestParam String id)
     {
+        UserController userController = new UserController();
+        userController.signUp("john", "dummywatchlist@usc.edu", "123456789", "123456789");
+        //userController.userRepository = userRepository;
         String en_email = encrypt(email, 5);
+        System.out.println(email + watchlistname + id);
 
-        User user = userRepository.findByEmail((en_email));
+        User user = userdatabase.get(en_email);
         if(user != null)
         {
+            System.out.println("Entered");
             String en_name = encrypt(watchlistname, 5);
-            HashMap<String, ArrayList<String>> alllists = user.getAllWatchlists();
+            Hashtable<String, ArrayList<String>> alllists = user.getAllWatchlists();
             ArrayList<String> specificlist = alllists.get(en_name);
             if(specificlist == null)
             {
                 String responseString = "{\"success\": \"" + "false" + "\"," +
                         "\"failure\": \"" + "true" + "\"}";
+                System.out.println("Null");
                 return responseString;
             }
             else {
                 user.addtowatchlist(id, encrypt(watchlistname, 5));
                 String responseString = "{\"success\": \"" + "true" + "\"," +
                         "\"failure\": \"" + "false" + "\"}";
+                System.out.println("Not Null");
                 return responseString;
             }
         }

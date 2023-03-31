@@ -40,6 +40,14 @@ function Home() {
 
             <button
                 onClick={() => {
+                    navigate("/Login-SignUp");
+                }}
+            >
+                Go to Login Signup page
+            </button>
+
+            <button
+                onClick={() => {
                     fetch("/api/ping", {
                         method: "POST",
                         headers: {

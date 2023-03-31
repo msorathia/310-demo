@@ -4,6 +4,8 @@ import axios from "axios";
 import "../styles/index.css";
 
 const Movie = ({ title, overview, id }) => {
+    const [AddListResponse, AddListSuccess] = useState(false);
+    const [RetrieveListResponse, RetrieveListSuccess] = useState(false);
     const [showPopup, setShowPopup] = useState(false);
     const [extraDetails, setExtraDetails] = useState([]);
     const [actorList, setActorList] = useState([]);
@@ -86,12 +88,35 @@ const Movie = ({ title, overview, id }) => {
     const handleAddToWatchlist = async (watchlistName) => {
       try {
         // make POST request to backend API with movie id and watchlist name
-        const response = await axios.post('http://localhost:8080//watchlist/addtolist?email=${temp}&watchlistname={watchlistName}&id={id}');
+        const email = "dummywatchlist@usc.edu";
+        const response = await axios.post(`http://localhost:8080/watchlistController/addtolist?email=${email}&watchlistname=${watchlistName}&id=${id}`);
         console.log(response.data); // print response from backend
+        if(response.data.success == "true")
+        {
+          AddListSuccess(true);
+        }
+        else if(response.data.failure == "false")
+        {
+           AddListSuccess(true);
+        }
       } catch (error) {
         console.log(error); // handle error
       }
     };
+
+    /*const handleRetrieveWatchlist = async (watchlistName) => {
+      try {
+        // make POST request to backend API with movie id and watchlist name
+        const response = await axios.post('http://localhost:8080/watchlistController/retrievelist?email=${temp}&watchlistname={watchlistName}');
+        console.log(response.data); // print response from backend
+        if(response.data != "")
+        {
+          RetrieveListSuccess(true);
+        }
+      } catch (error) {
+        console.log(error); // handle error
+      }
+    };*/
 
     return (
         <div
@@ -109,10 +134,12 @@ const Movie = ({ title, overview, id }) => {
                         e.stopPropagation();
                         toggleWatchlist();
                         //contact back-end and retrieve watchlist names
-                        axios.get("/watchlists").then((response) => {
-                          const watchlists = response.data;
+                        const email = "dummywatchlist@usc.edu";
+                        axios.get("http://localhost:8080/watchlistController/retrievelist?email=${email}&watchlistname={watchlistName}").then((response) => {
+
+                          const watchlists = JSON.parse(response.data);
                           // do something with the retrieved watchlists
-                          console.log(response.data);
+                          console.log(watchlists);
                         }).catch((error) => {
                           console.log(error);
                         });
@@ -124,6 +151,8 @@ const Movie = ({ title, overview, id }) => {
             {showWatchlistPrompt && (
                 <div>
                     <p>Add to existing watchlist:</p>
+                    {AddListResponse && <p>Added Successfully!</p>}
+                    {!AddListResponse && <p>Added Failed!</p>}
                     {watchlists.map((watchlist, index) => (
                         <button key={index} onClick={() => handleAddToWatchlist(watchlist.name)}>
                             {watchlist.name}
