@@ -34,7 +34,7 @@ function Montage() {
             console.log(imageList);
             setIdList(responseIds);
         } catch (error) {
-            console.error(error);
+            console.log(error.toString());
         }
     }
 

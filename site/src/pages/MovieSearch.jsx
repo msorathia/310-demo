@@ -10,7 +10,7 @@ const Movie = ({ title, overview, id }) => {
     const [isHovering, setIsHovering] = useState(false);
 
     const [isInWatchlist, setIsInWatchlist] = useState(
-        localStorage.getItem(id) === "true"
+        (localStorage.getItem(id) === "true")
     );
 
     const [showWatchlistPrompt, setShowWatchlistPrompt] = useState(false);
@@ -162,6 +162,7 @@ function MovieSearch() {
 
     const handleSearch = async (event) => {
         event.preventDefault();
+        setPage(1)
         try {
             console.log("waiting for repsonse");
             console.log(`query is ${searchQuery} and type is ${searchType} and page is ${page}`);
@@ -170,7 +171,12 @@ function MovieSearch() {
             );
             console.log(response)
             console.log("received response")
-            setResults(response.data.results);
+            if (response.data === "") {
+                setResults([]);
+            }
+            else {
+                setResults(response.data.results);
+            }
             setTotalPages(response.data.total_pages);
         } catch (error) {
             console.error(error);
@@ -291,6 +297,7 @@ function MovieSearch() {
                 <div>
                     <input
                         type="text"
+                        placeholder="Search for movies"
                         value={searchQuery}
                         onChange={handleSearchQueryChange}
                     />

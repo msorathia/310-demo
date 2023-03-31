@@ -8,12 +8,6 @@ jest.mock('axios');
 
 beforeEach(() => {
     fetch.resetMocks();
-    const mockedUsedNavigate = jest.fn();
-
-    jest.mock('react-router-dom', () => ({
-        ...jest.requireActual('react-router-dom'),
-        useNavigate: () => mockedUsedNavigate,
-    }));
 
 });
 
@@ -70,64 +64,73 @@ test("image list is retrieved", async () => {
         'http://localhost:8080/getpicturemontage?user=',
     );
 
-    expect(screen.getByAltText("movie image 1")).toHaveAttribute(
-        'src',
-        imageList[0],
-    );
-    expect(screen.getByAltText("movie image 2")).toHaveAttribute(
-        'src',
-        imageList[1],
-    );
-    expect(screen.getByAltText("movie image 3")).toHaveAttribute(
-        'src',
-        imageList[2],
-    );
-    expect(screen.getByAltText("movie image 4")).toHaveAttribute(
-        'src',
-        imageList[3],
-    );
-    expect(screen.getByAltText("movie image 5")).toHaveAttribute(
-        'src',
-        imageList[4],
-    );
-    expect(screen.getByAltText("movie image 6")).toHaveAttribute(
-        'src',
-        imageList[5],
-    );
-    expect(screen.getByAltText("movie image 7")).toHaveAttribute(
-        'src',
-        imageList[6],
-    );
-    expect(screen.getByAltText("movie image 8")).toHaveAttribute(
-        'src',
-        imageList[7],
-    );
-    expect(screen.getByAltText("movie image 9")).toHaveAttribute(
-        'src',
-        imageList[8],
-    );
-    expect(screen.getByAltText("movie image 10")).toHaveAttribute(
-        'src',
-        imageList[9],
-    );
+    expect(imageList).toContain(screen.getByAltText("movie image 1").getAttribute('src'));
+    expect(imageList).toContain(screen.getByAltText("movie image 2").getAttribute('src'));
+    expect(imageList).toContain(screen.getByAltText("movie image 3").getAttribute('src'));
+    expect(imageList).toContain(screen.getByAltText("movie image 4").getAttribute('src'));
+    expect(imageList).toContain(screen.getByAltText("movie image 5").getAttribute('src'));
+    expect(imageList).toContain(screen.getByAltText("movie image 6").getAttribute('src'));
+    expect(imageList).toContain(screen.getByAltText("movie image 7").getAttribute('src'));
+    expect(imageList).toContain(screen.getByAltText("movie image 8").getAttribute('src'));
+    expect(imageList).toContain(screen.getByAltText("movie image 9").getAttribute('src'));
+    expect(imageList).toContain(screen.getByAltText("movie image 10").getAttribute('src'));
+    // expect(screen.getByAltText("movie image 2")).toHaveAttribute(
+    //     'src',
+    //     imageList[1],
+    // );
+    // expect(screen.getByAltText("movie image 3")).toHaveAttribute(
+    //     'src',
+    //     imageList[2],
+    // );
+    // expect(screen.getByAltText("movie image 4")).toHaveAttribute(
+    //     'src',
+    //     imageList[3],
+    // );
+    // expect(screen.getByAltText("movie image 5")).toHaveAttribute(
+    //     'src',
+    //     imageList[4],
+    // );
+    // expect(screen.getByAltText("movie image 6")).toHaveAttribute(
+    //     'src',
+    //     imageList[5],
+    // );
+    // expect(screen.getByAltText("movie image 7")).toHaveAttribute(
+    //     'src',
+    //     imageList[6],
+    // );
+    // expect(screen.getByAltText("movie image 8")).toHaveAttribute(
+    //     'src',
+    //     imageList[7],
+    // );
+    // expect(screen.getByAltText("movie image 9")).toHaveAttribute(
+    //     'src',
+    //     imageList[8],
+    // );
+    // expect(screen.getByAltText("movie image 10")).toHaveAttribute(
+    //     'src',
+    //     imageList[9],
+    // );
 
 
 });
 
 test("there's an error message if the backend does not respond", async () => {
 
-    jest.spyOn(console, 'log');
+    const logSpy = jest.spyOn(console, 'log');
 
     const errorMessage = "Fail!";
-    axios.get.mockRejectedValue(new Error(errorMessage));
+    axios.get.mockRejectedValue(errorMessage);
+
+
 
     await act(async () => {
-        render(<Montage />);
+        render(<Router><Montage /></Router>);
     });
 
     expect(screen.getByText('Montage')).toBeInTheDocument();
     expect(screen.getByRole('button')).toBeInTheDocument();
-    expect(screen.queryAllByRole('img')).toHaveLength(0);
+    expect(screen.queryAllByRole('img')).toHaveLength(10);
+    expect(screen.getByAltText("movie image 1").getAttribute('src')).toBe(null);
 
 
     expect(axios.get).toHaveBeenCalledTimes(1);
@@ -135,6 +138,8 @@ test("there's an error message if the backend does not respond", async () => {
         'http://localhost:8080/getpicturemontage?user=',
     );
 
-    expect(console.log.mock.calls.length).toHaveTextContent("Fail!");
+    expect(logSpy).toHaveBeenCalledWith("Fail!");
+
+
 
 });

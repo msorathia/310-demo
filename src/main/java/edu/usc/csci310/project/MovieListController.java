@@ -63,6 +63,9 @@ public class MovieListController {
             // Parse the JSON response to get the person ID for the first person in the results
             JSONObject jsonObject = new JSONObject(responseString);
             JSONArray resultsArray = jsonObject.getJSONArray("results");
+            if (resultsArray.length() == 0) {
+                return "";
+            }
             JSONObject person = resultsArray.getJSONObject(0);
             int personId = person.getInt("id");
 
@@ -105,6 +108,9 @@ public class MovieListController {
             // Parse the JSON response to get the keyword ID for the first keyword in the results
             JSONObject jsonObject = new JSONObject(responseString);
             JSONArray resultsArray = jsonObject.getJSONArray("results");
+            if (resultsArray.length() == 0) {
+                return "";
+            }
             JSONObject keyword = resultsArray.getJSONObject(0);
             int keywordId = keyword.getInt("id");
 

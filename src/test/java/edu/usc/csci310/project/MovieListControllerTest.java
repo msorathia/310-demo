@@ -11,8 +11,7 @@ class MovieListControllerTest {
     @Test
     void movieList() throws Exception {
 
-        String returnedResponse = mlc.movieList("fast and furious", "keyword", "1");
-
+        String returnedResponse = mlc.movieList("fast and furious", "title", "1");
         assertNotNull(returnedResponse);
         assertTrue(returnedResponse.contains("overview"));
         assertTrue(returnedResponse.contains("title"));

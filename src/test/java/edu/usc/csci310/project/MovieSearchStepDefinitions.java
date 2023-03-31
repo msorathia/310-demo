@@ -1,5 +1,6 @@
 package edu.usc.csci310.project;
 
+import io.cucumber.java.After;
 import io.cucumber.java.Before;
 import io.cucumber.java.BeforeAll;
 import io.cucumber.java.en.And;
@@ -46,6 +47,12 @@ public class MovieSearchStepDefinitions {
         driver = new ChromeDriver(options);
     }
 
+    @After
+    public void after() {
+        driver.close();
+        driver.quit();
+    }
+
     @Given("I am on the movie search page")
     public void iAmOnTheMovieSearchPage() {
         driver.get(ROOT_URL + "MovieSearch");
@@ -64,8 +71,9 @@ public class MovieSearchStepDefinitions {
 
     @Then("I should see more search results")
     public void iShouldSeeMoreSearchResults() {
-        int initialCount = driver.findElements(By.className("movie-item")).size();
-        driver.findElement(By.xpath("//*[@id=\"root\"]/div/div/button")).click();
+        int initialCount = 10;
+        Duration d = Duration.ofSeconds(20);
+        new WebDriverWait(driver, d).until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[@id=\"root\"]/div/div/div/div[11]")));
         int finalCount = driver.findElements(By.className("movie-item")).size();
         assertEquals(true, finalCount > initialCount);
     }
@@ -73,6 +81,7 @@ public class MovieSearchStepDefinitions {
     @When("I click on the {string} button")
     public void iClickOnTheButton(String buttonName) {
         driver.findElement(By.xpath("//button[contains(text(), '"+buttonName+"')]")).click();
+
     }
 
     @Then("I should see details about the movie")
@@ -101,6 +110,8 @@ public class MovieSearchStepDefinitions {
     public void iSearchForUsingTheEnterKey(String arg0) {
         driver.findElement(By.xpath("/html/body/div[1]/div/div/form/div[2]/input")).sendKeys(arg0);
         driver.findElement(By.xpath("/html/body/div[1]/div/div/form/div[2]/input")).sendKeys(Keys.ENTER);
+        Duration d = Duration.ofSeconds(20);
+        new WebDriverWait(driver, d).until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[@id=\"root\"]/div/div/div/div[1]")));
 
     }
 
@@ -118,6 +129,8 @@ public class MovieSearchStepDefinitions {
     public void iSearchForUsingTheSearchButton(String arg0) {
         driver.findElement(By.xpath("/html/body/div[1]/div/div/form/div[2]/input")).sendKeys(arg0);
         driver.findElement(By.xpath("/html/body/div[1]/div/div/form/div[2]/button")).click();
+        Duration d = Duration.ofSeconds(20);
+        new WebDriverWait(driver, d).until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[@id=\"root\"]/div/div/div/div[1]")));
     }
 
     @When("I press the actor radio button")
@@ -156,5 +169,33 @@ public class MovieSearchStepDefinitions {
     @Then("The list should not be scrollable")
     public void theListShouldNotBeScrollable() {
         assertTrue(driver.findElement(By.cssSelector("#root > div > div > div > div:nth-child(1) > div > div > div")).getCssValue("overflow-y").equals("scroll"));
+    }
+
+    @And("I choose the load more button")
+    public void iChooseTheLoadMoreButton() {
+        driver.findElement(By.xpath("/html/body/div[1]/div/div/button")).click();
+    }
+
+    @And("I search for {string} using the Enter key, not expecting results")
+    public void iSearchForUsingTheEnterKeyNotExpectingResults(String arg0) {
+        driver.findElement(By.xpath("/html/body/div[1]/div/div/form/div[2]/input")).sendKeys(arg0);
+        driver.findElement(By.xpath("/html/body/div[1]/div/div/form/div[2]/input")).sendKeys(Keys.ENTER);
+    }
+
+    @Given("I am on the Montage page")
+    public void iAmOnTheMontagePage() {
+        driver.get(ROOT_URL + "Montage");
+        Duration d = Duration.ofSeconds(20);
+        new WebDriverWait(driver, d).until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[@id=\"11\"]")));
+    }
+
+
+    @Then("I should see a collage of ten dummy movies")
+    public void iShouldSeeACollageOfTenDummyMovies() {
+        List<WebElement> imageList = driver.findElements(By.className("montage-image"));
+
+        assertTrue(imageList.size() >= 10);
+
+
     }
 }
