@@ -83,6 +83,16 @@ const Movie = ({ title, overview, id }) => {
         setShowWatchlistPrompt(false);
     };
 
+    const handleAddToWatchlist = async (watchlistName) => {
+      try {
+        // make POST request to backend API with movie id and watchlist name
+        const response = await axios.post('http://localhost:8080//watchlist/addtolist?email=${temp}&watchlistname={watchlistName}&id={id}');
+        console.log(response.data); // print response from backend
+      } catch (error) {
+        console.log(error); // handle error
+      }
+    };
+
     return (
         <div
             key={id}
@@ -98,6 +108,14 @@ const Movie = ({ title, overview, id }) => {
                     onClick={(e) => {
                         e.stopPropagation();
                         toggleWatchlist();
+                        //contact back-end and retrieve watchlist names
+                        axios.get("/watchlists").then((response) => {
+                          const watchlists = response.data;
+                          // do something with the retrieved watchlists
+                          console.log(response.data);
+                        }).catch((error) => {
+                          console.log(error);
+                        });
                     }}
                 >
                     {isInWatchlist ? "-" : "+"}
@@ -107,9 +125,11 @@ const Movie = ({ title, overview, id }) => {
                 <div>
                     <p>Add to existing watchlist:</p>
                     {watchlists.map((watchlist, index) => (
-                        <button key={index} onClick={() => handleWatchlistSelection(index)}>
+                        <button key={index} onClick={() => handleAddToWatchlist(watchlist.name)}>
                             {watchlist.name}
                         </button>
+
+                        //send movie ids, watchlist name, user email to back-end
                     ))}
                     <p>Create a new watchlist:</p>
                     <input

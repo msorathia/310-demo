@@ -1,28 +1,37 @@
-Feature: Movie Watch Lists
-  As a user of the movie search website,
-  I want to create and manage movie watch lists,
-  so that I can keep track of the movies I want to watch.
+Feature: Create and save movie watch lists
+
+  Scenario: Hover over search result to display additional controls
+    Given the user is on the search results page
+    When the user hovers over a search result on a desktop device
+    Then additional controls (+ button) should appear
+
+  Scenario: Add movie to an existing or new watch list
+    Given the user is on the search results page
+    When the user clicks the add to watch list button (+ button)
+    Then the user should be able to add the movie to an existing list or create a new list
 
   Scenario: Create a new watch list
-    Given I am on the movie search page
-    When I hover over a movie search result
-    And I click on the "+" button to the right of the search result
-    And I select "Create new list"
-    And I enter a name for the new list
-    And I select whether to make it public or private
-    And I click "Create"
-    Then the new list should be created
-    And the movie should be added to the new list
+    Given the user is adding a movie to a watch list
+    When the user chooses to create a new list
+    And the user enters a name for the new list
+    And the user presses "enter" or clicks "create"
+    Then a new watch list should be created with the default setting as "private"
+    And the movie should be automatically added to the new list
 
-  Scenario: Add a movie to an existing watch list
-    Given I am on the movie search page
-    When I hover over a movie search result
-    And I click on the "+" button
-    And I select an existing list to add the movie to
-    Then the movie should be added to the selected list
+  Scenario: Delete movie from watch list
+    Given the user has a movie in their watch list
+    When the user clicks the delete button for the movie (- button)
+    And the user confirms the deletion in the dialog
+    Then the movie should be removed from the watch list
 
-  Scenario: Delete a movie from a watch list
-    Given I am viewing a movie in a watch list
-    When I click on the "-" button
-    Then a confirmation dialog should appear
-    And if I confirm, the movie should be removed from the list
+  Scenario: Move movie to another watch list
+    Given the user has a movie in their watch list
+    When the user clicks the move button for the movie
+    And the user selects another list to move or copy the movie to
+    Then the movie should be moved to the selected list accordingly and removed from the existing list
+
+  Scenario: Copy movie to another watch list
+    Given the user has a movie in their watch list
+    When the user clicks the copy button for the movie
+    And the user selects another list to copy the movie to
+    Then the movie should be copied to the selected list accordingly
