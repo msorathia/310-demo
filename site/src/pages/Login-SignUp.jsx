@@ -189,7 +189,3 @@ function LoginSignup() {
         </div>
   )};
 export default LoginSignup;
-<<<<<<< HEAD
-
-=======
->>>>>>> moviedetails-test
