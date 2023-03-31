@@ -10,6 +10,7 @@ import java.util.Hashtable;
 public class UserController {
     //@Autowired
     //public UserRepository userRepository;
+
     public static Hashtable<String, User> userdatabase = new Hashtable<String, User>();
 
     public static String encrypt(String plaintext, int shift) {

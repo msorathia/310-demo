@@ -41,6 +41,7 @@ public class LoginSignupStepDefinitions {
     @Before
     public void before() {
         ChromeOptions options = new ChromeOptions();
+        options.addArguments("--headless");
         options.addArguments("--whitelisted-ips");
         options.addArguments("--no-sandbox");
         options.addArguments("--disable-extensions");
