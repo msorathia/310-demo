@@ -40,7 +40,7 @@ public class watchlistController {
     }
 
     @PostMapping("/createwatchlist")
-    public String createwatchlist(@RequestParam String watchlistname, @RequestParam String email) {
+    public String createList(@RequestParam String watchlistname, @RequestParam String email) {
         //encrypting
         UserController userController = new UserController();
         userController.signUp("john", "dummywatchlist@usc.edu", "1234", "1234");
