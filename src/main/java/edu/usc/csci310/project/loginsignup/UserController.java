@@ -10,7 +10,8 @@ import java.util.Hashtable;
 public class UserController {
     //@Autowired
     //public UserRepository userRepository;
-    public Hashtable<String, User> userdatabase;
+
+    public static Hashtable<String, User> userdatabase = new Hashtable<String, User>();
 
     public static String encrypt(String plaintext, int shift) {
         StringBuilder ciphertext = new StringBuilder();
@@ -53,7 +54,7 @@ public class UserController {
             String en_email = encrypt(email, 5);
 
             // long emailid = Long.parseLong(en_email);
-            if(userdatabase.get(en_email) == null)
+            if(userdatabase.get(en_email) != null)
             {
                 String responseString = "{\"success\": \"" + "failure" + "\"," +
                         "\"passwordmatch\": \"" + "true" + "\"," +

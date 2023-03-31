@@ -1,4 +1,4 @@
-package edu.usc.csci310.project;
+/*package edu.usc.csci310.project;
 
 import io.cucumber.java.Before;
 import io.cucumber.java.BeforeAll;
@@ -90,4 +90,4 @@ public class WatchListStepDefinitions {
     public void theUserChoosesToCreateANewList() {
         driver.findElement(By.xpath("//button[text()='Create']")).click();
     }
-}
+}*/

@@ -11,6 +11,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -157,4 +158,42 @@ public class MovieSearchStepDefinitions {
     public void theListShouldNotBeScrollable() {
         assertTrue(driver.findElement(By.cssSelector("#root > div > div > div > div:nth-child(1) > div > div > div")).getCssValue("overflow-y").equals("scroll"));
     }
+    @Given("the user is on the search results page")
+    public void theUserIsOnTheSearchResultsPage() {
+        driver.get(ROOT_URL + "MovieSearch");
+    }
+
+    @When("the user hovers over a search result on a desktop device")
+    public void theUserHoversOverASearchResultOnADesktopDevice() {
+        WebElement searchResult = driver.findElement(By.className("movie-item"));
+        Actions action = new Actions(driver);
+        action.moveToElement(searchResult).perform();
+    }
+
+    @Then("additional controls should appear")
+    public void additionalControlsShouldAppear() {
+        assertTrue(driver.findElement(By.className("add-button")).isDisplayed());
+    }
+
+    @When("the user clicks the add to watch list button")
+    public void theUserClicksTheAddToWatchListButton() {
+        driver.findElement(By.className("add-button")).click();
+    }
+
+    @Then("the user should be able to add the movie to an existing list or create a new list")
+    public void theUserShouldBeAbleToAddTheMovieToAnExistingListOrCreateANewList() {
+        assertTrue(driver.findElement(By.className("watchlist-prompt")).isDisplayed());
+    }
+
+    @Given("the user is adding a movie to a watch list")
+    public void theUserIsAddingAMovieToAWatchList() {
+        theUserIsOnTheSearchResultsPage();
+        theUserClicksTheAddToWatchListButton();
+    }
+
+    @When("the user chooses to create a new list")
+    public void theUserChoosesToCreateANewList() {
+        driver.findElement(By.xpath("//button[text()='Create']")).click();
+    }
+
 }

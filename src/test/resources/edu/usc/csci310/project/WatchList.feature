@@ -3,11 +3,11 @@ Feature: Create and save movie watch lists
   Scenario: Hover over search result to display additional controls
     Given the user is on the search results page
     When the user hovers over a search result on a desktop device
-    Then additional controls (+ button) should appear
+    Then additional controls should appear
 
   Scenario: Add movie to an existing or new watch list
     Given the user is on the search results page
-    When the user clicks the add to watch list button (+ button)
+    When the user clicks the add to watch list button
     Then the user should be able to add the movie to an existing list or create a new list
 
   Scenario: Create a new watch list
@@ -20,7 +20,7 @@ Feature: Create and save movie watch lists
 
   Scenario: Delete movie from watch list
     Given the user has a movie in their watch list
-    When the user clicks the delete button for the movie (- button)
+    When the user clicks the delete button for the movie
     And the user confirms the deletion in the dialog
     Then the movie should be removed from the watch list
 

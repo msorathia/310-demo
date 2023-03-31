@@ -95,9 +95,9 @@ const Movie = ({ title, overview, id }) => {
         {
           AddListSuccess(true);
         }
-        else
+        else if(response.data.failure == "false")
         {
-           AddListSuccess(false);
+           AddListSuccess(true);
         }
       } catch (error) {
         console.log(error); // handle error
@@ -134,10 +134,12 @@ const Movie = ({ title, overview, id }) => {
                         e.stopPropagation();
                         toggleWatchlist();
                         //contact back-end and retrieve watchlist names
-                        axios.get("/watchlists").then((response) => {
-                          const watchlists = response.data;
+                        const email = "dummywatchlist@usc.edu";
+                        axios.get("http://localhost:8080/watchlistController/retrievelist?email=${email}&watchlistname={watchlistName}").then((response) => {
+
+                          const watchlists = JSON.parse(response.data);
                           // do something with the retrieved watchlists
-                          console.log(response.data);
+                          console.log(watchlists);
                         }).catch((error) => {
                           console.log(error);
                         });
