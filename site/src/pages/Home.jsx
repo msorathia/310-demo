@@ -40,7 +40,7 @@ function Home() {
 
             <button
                 onClick={() => {
-                    navigate("/Login-SignUp");
+                    navigate("/loginsignup");
                 }}
             >
                 Go to Login Signup page

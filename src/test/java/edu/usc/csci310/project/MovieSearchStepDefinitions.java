@@ -34,7 +34,7 @@ public class MovieSearchStepDefinitions {
     public static void beforeAll() {
         System.out.println("Setting Up Driver");
         System.setProperty("webdriver.http.factory", "jdk-http-client");
-        WebDriverManager.chromedriver().driverVersion("110.0.5481").setup();
+        WebDriverManager.chromedriver().setup();
     }
 
     @Before

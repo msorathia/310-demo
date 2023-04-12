@@ -13,7 +13,7 @@ function App() {
                 {/* Root pages, located in /pages/ */}
                 <Route path="/" element={<Home />} />
                 <Route path="/other" element={<Other />} />
-                <Route path="/LoginSignUp" element={<LoginSignUp />} />
+                <Route path="/loginsignup" element={<LoginSignUp />} />
                 <Route exact path="/MovieSearch" element={<MovieSearch />} />
                 <Route exact path="/Montage" element={<Montage />} />
                 {/* 404 page not found redirect */}
