@@ -1,7 +1,11 @@
 package edu.usc.csci310.project.loginsignup;
 
-import org.junit.Test;
 
+import org.junit.jupiter.api.Test;
+
+import java.util.Hashtable;
+
+import static edu.usc.csci310.project.loginsignup.UserController.encrypt;
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
@@ -33,11 +37,11 @@ public class UserControllerTest {
     @Test
     public void signUpThird() {         //user already exists
         UserController user = new UserController();
-        UserRepository mockrepo = mock(UserRepository.class);
-        user.userRepository = mockrepo;
+        Hashtable<String, User> mockrepo = mock(Hashtable.class);
+        user.userdatabase = mockrepo;
         User newuser = new User("temp", "temp", "temp");
 
-        when(mockrepo.findByEmail(anyString())).thenReturn(newuser);
+        when(mockrepo.get(anyString())).thenReturn(newuser);
 
         String answer = user.signUp("monil", "monil@usc.edu", "12345678", "12345678");
 
@@ -51,12 +55,12 @@ public class UserControllerTest {
     @Test
     public void signUpFourth() {         //successful sign up
         UserController user = new UserController();
-        UserRepository mockrepo = mock(UserRepository.class);
-        user.userRepository = mockrepo;
+        Hashtable<String, User> mockrepo = mock(Hashtable.class);
+        user.userdatabase = mockrepo;
         User newuser = new User("temp", "temp", "temp");
 
-        when(mockrepo.findByEmail(anyString())).thenReturn(null);
-        when(mockrepo.save(any())).thenReturn(null);
+        when(mockrepo.get(anyString())).thenReturn(null);
+        when(mockrepo.put(anyString(), isA(User.class))).thenReturn(newuser);
         String answer = user.signUp("monil", "monil@usc.edu", "12345678", "12345678");
 
         String expected = "{\"success\": \"" + "true" + "\"}";
@@ -65,11 +69,11 @@ public class UserControllerTest {
     @Test
     public void loginFirst() {
         UserController user = new UserController();
-        UserRepository mockrepo = mock(UserRepository.class);
-        user.userRepository = mockrepo;
+        Hashtable<String, User> mockrepo = mock(Hashtable.class);
+        user.userdatabase = mockrepo;
 
         String answer = user.login("temp", "temp");
-        when(mockrepo.findByEmail(anyString())).thenReturn(null);
+        when(mockrepo.get(anyString())).thenReturn(null);
 
         String expected = "{\"success\": \"" + "failure" + "\"," +
                 "\"loginuserexists\": \"" + "false" + "\"}";
@@ -81,11 +85,11 @@ public class UserControllerTest {
     @Test
     public void loginSecond() {
         UserController user = new UserController();
-        UserRepository mockrepo = mock(UserRepository.class);
-        user.userRepository = mockrepo;
+        Hashtable<String, User> mockrepo = mock(Hashtable.class);
+        user.userdatabase = mockrepo;
 
         User mockuser = mock(User.class);
-        when(mockrepo.findByEmail(anyString())).thenReturn(mockuser);
+        when(mockrepo.get(anyString())).thenReturn(mockuser);
 
 
         when(mockuser.getPassword()).thenReturn("");
@@ -98,24 +102,18 @@ public class UserControllerTest {
     @Test
     public void loginThird() {
         UserController user = new UserController();
-        UserRepository mockrepo = mock(UserRepository.class);
-        user.userRepository = mockrepo;
+        Hashtable<String, User> mockrepo = mock(Hashtable.class);
+        user.userdatabase = mockrepo;
 
         User mockuser = mock(User.class);
         mockuser.setEmail("temp");
         mockuser.setPassword("temp");
         mockuser.setName("temp");
-        when(mockrepo.findByEmail(anyString())).thenReturn(mockuser);
+        when(mockrepo.get(anyString())).thenReturn(mockuser);
 
         String en_password = "";
         String password = "temp";
-        for(int i = 0; i < password.length(); i++)
-        {
-            char ch = password.charAt(i);
-            int ascii_val = (ch + 5)%100;
-            en_password = en_password + Integer.toString(ascii_val);
-        }
-
+        en_password = encrypt(password, 5);
         when(mockuser.getPassword()).thenReturn(en_password);
         String expected = "{\"success\": \"" + "true" + "\"}";
         String answer = user.login("temp", "temp");
